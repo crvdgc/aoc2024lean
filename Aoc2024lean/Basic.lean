@@ -15,7 +15,9 @@ end Parsec
 
 namespace Array
 
-def sort [Ord α] (xs : Array α) : Array α :=
-  Array.insertionSort xs (fun x₁ x₂ => Ord.compare x₁ x₂ = Ordering.lt)
+def splitWhile (p : α → Bool) (xs: Array α) : Array α × Array α :=
+  let head := xs.takeWhile p
+  let tail := xs.extract head.size xs.size
+  (head, tail)
 
 end Array
