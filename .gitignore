@@ -1,0 +1,3 @@
+/.lake
+input/*
+!input/.gitkeep

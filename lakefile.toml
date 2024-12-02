@@ -1,0 +1,15 @@
+name = "aoc2024lean"
+version = "0.1.0"
+defaultTargets = ["aoc2024lean"]
+
+[[lean_lib]]
+name = "Aoc2024lean"
+
+[[lean_exe]]
+name = "aoc2024lean"
+root = "Main"
+
+[[require]]
+name = "batteries"
+scope = "leanprover-community"
+rev = "main"
