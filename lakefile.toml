@@ -8,6 +8,7 @@ name = "Aoc2024lean"
 [[lean_exe]]
 name = "aoc2024lean"
 root = "Main"
+defaultTargets = true
 
 [[require]]
 name = "batteries"
