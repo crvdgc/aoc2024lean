@@ -3,3 +3,4 @@
 import Aoc2024lean.Basic
 import Aoc2024lean.D1
 import Aoc2024lean.D2
+import Aoc2024lean.D3

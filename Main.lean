@@ -34,5 +34,6 @@ def main (args : List String) : IO Unit := do
   match day with
   | "1" => D1.run part input
   | "2" => D2.run part input
+  | "3" => D3.run part input
   | "test" => test ()
   | day => println! s!"Day {day} not implemented"
