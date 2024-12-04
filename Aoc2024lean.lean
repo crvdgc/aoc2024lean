@@ -2,3 +2,4 @@
 -- Import modules here that should be built as part of the library.
 import Aoc2024lean.Basic
 import Aoc2024lean.D1
+import Aoc2024lean.D2
