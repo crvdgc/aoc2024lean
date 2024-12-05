@@ -22,6 +22,8 @@ def mul : Parser Nat := do
   skipChar ')'
   pure (n₁ * n₂)
 
+
+
 partial def muls : Parser Nat := do
   let rec go (acc : Nat) : Parser Nat :=
     tryCatch (attempt mul)
@@ -33,13 +35,40 @@ def part1 (input : Array String) : IO Unit := do
   let ans := input.map (parse! muls) |>.foldl (. + .) 0
   println! s!"{ans}"
 
+def switch : Parser Bool :=
+    (pstring "do()" *> pure true) <|>
+    (pstring "don't()" *> pure false)
+
+partial def muls' : Bool → Parser (Nat × Bool) :=
+  let rec go (acc : Nat) (enabled : Bool) : Parser (Nat × Bool) :=
+    tryCatch
+      (attempt mul)
+      (fun n =>
+        if enabled
+          then
+            go (acc + n) enabled
+          else
+            go acc enabled)
+      (fun () => do
+        tryCatch
+          switch
+          (fun enabled => go acc enabled)
+          (fun () =>
+            (Parsec.String.take 1 *> go acc enabled) <|>
+            pure (acc, enabled)))
+  go 0
+
 def part2 (input : Array String) : IO Unit := do
-  println! "part2"
+  let ans := input.foldl (fun (acc, enabled) line =>
+    let (sum, enabled) := parse! (muls' enabled) line
+    (sum + acc, enabled))
+    (0, true)
+  println! s!"{ans}"
 
 def run (part : String) (input : Array String) : IO Unit := do
   match part with
   | "1" | "1e" | "1e2" => part1 input
-  | "2" | "2e" => part2 input
+  | "2" | "2e" | "2e2" => part2 input
   | _ => println! s!"{part} not implemented"
 
 end D3
