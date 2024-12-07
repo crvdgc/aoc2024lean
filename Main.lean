@@ -38,5 +38,6 @@ def main (args : List String) : IO Unit := do
   | "4" => D4.run part input
   | "5" => D5.run part input
   | "6" => D6.run part input
+  | "7" => D7.run part input
   | "test" => test ()
   | day => println! s!"Day {day} not implemented"
