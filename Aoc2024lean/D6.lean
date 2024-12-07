@@ -36,7 +36,36 @@ def part1 (input : Array String) :=
   println! s!"{count}"
   
 def part2 (input : Array String) :=
-  println! s!"{input}"
+  let m := input.size
+  let (n, obstacles, startPos) := parse input
+  let inBound (pos : Int × Int) :=
+    let (x, y) := pos
+    0 ≤ x && x < m && 0 ≤ y && y < n
+  let count := Id.run do
+    let mut count := 0
+    for ox in [:m] do
+      for oy in [:n] do
+        let (ox, oy) := dbgTraceVal (Int.ofNat ox, Int.ofNat oy)
+        if obstacles.contains (ox, oy) || (ox, oy) == startPos then
+          continue
+        let mut map := Array.mkArray m (Array.mkArray n (Array.mkArray 4 false))
+        let mut pos := startPos
+        let mut dir : Nat := 0
+        while inBound pos do
+          if map[pos.fst.toNat]![pos.snd.toNat]![dir]!
+            then
+              count := count + 1
+              break
+          map := map.modify pos.fst.toNat (fun r =>
+            r.modify pos.snd.toNat (fun c =>
+              c.set! dir true))
+          let (dx, dy) := dirs[dir]!
+          let (x, y) := (pos.fst + dx, pos.snd + dy)
+          if obstacles.contains (x, y) || (x, y) == (ox, oy)
+            then dir := (dir + 1) % 4
+            else pos := (x, y)
+    count
+  println! s!"{count}"
 
 def run (part : String) (input : Array String) : IO Unit :=
   if part.startsWith "1"
