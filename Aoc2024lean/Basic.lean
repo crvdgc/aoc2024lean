@@ -26,4 +26,7 @@ def tail (xs : Array α) : Array α :=
 def sum [Add α] [OfNat α 0] (xs : Array α) : α :=
   xs.foldl (. + .) 0
 
+def count (xs : Array Bool) : Nat :=
+  xs.filter id |>.size
+
 end Array
