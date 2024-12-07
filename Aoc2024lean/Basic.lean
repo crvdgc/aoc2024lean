@@ -20,4 +20,10 @@ def splitWhile (p : α → Bool) (xs: Array α) : Array α × Array α :=
   let tail := xs.extract head.size xs.size
   (head, tail)
 
+def tail (xs : Array α) : Array α :=
+  xs.extract 1 xs.size
+
+def sum [Add α] [OfNat α 0] (xs : Array α) : α :=
+  xs.foldl (. + .) 0
+
 end Array
