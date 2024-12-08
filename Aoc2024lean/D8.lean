@@ -52,8 +52,28 @@ def part1 (input : Array String) :=
       |>.size
   println! s!"{count}"
 
+-- takeWhile inBounds [start, start + d, start + 2 * d, ...]
+partial def inBoundPsAux (bounds : P) (d : P) (start : P) (acc : List P) : List P :=
+  if inBounds bounds start
+    then inBoundPsAux bounds d (Prod.pairwiseBoth (. + .) start d) (start :: acc)
+    else acc
+
+def inBoundAntinodes' (bounds : P) (p₁ : P) (p₂ : P) : List P :=
+  let d := Prod.pairwiseBoth (. - .) p₂ p₁
+  let invd := (0, 0).pairwiseBoth (. - .) d
+  inBoundPsAux bounds d p₁ [] ++ inBoundPsAux bounds invd p₁ []
+
+-- #eval inBoundAntinodes' (10, 10) (0, 0) (1, 3)
+
 def part2 (input : Array String) :=
-  println! s!"{input}"
+  let (bounds, signals) := parse input
+  let inBoundAntinodes := Function.uncurry (inBoundAntinodes' bounds)
+  let count :=
+    signals
+      |>.flatMap (fun ps => pairs ps |>.flatMap inBoundAntinodes)
+      |> HashSet.ofList
+      |>.size
+  println! s!"{count}"
 
 def run (part : String) (input : Array String) : IO Unit :=
   if part.startsWith "1"

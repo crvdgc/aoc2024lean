@@ -37,3 +37,14 @@ def tally (xs : List α) (p : α → Bool) : Nat :=
   xs.map (fun x => if p x then 1 else 0) |>.sum
 
 end List
+
+namespace Prod
+
+def both (f : α → β) : (α × α) → (β × β) := Prod.map f f
+
+def pairwise (f : α₁ → β₁ → γ₁) (g : α₂ → β₂ → γ₂) (p₁ : α₁ × α₂) (p₂ : β₁ × β₂) : γ₁ × γ₂ :=
+  (f p₁.fst p₂.fst, g p₁.snd p₂.snd)
+
+def pairwiseBoth (f : α → β → γ) := pairwise f f
+
+end Prod
