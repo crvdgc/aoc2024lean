@@ -30,3 +30,10 @@ def count (xs : Array Bool) : Nat :=
   xs.filter id |>.size
 
 end Array
+
+namespace List
+
+def tally (xs : List α) (p : α → Bool) : Nat :=
+  xs.map (fun x => if p x then 1 else 0) |>.sum
+
+end List
