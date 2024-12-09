@@ -29,7 +29,6 @@ def parseFree (fileId : Nat) (acc : List FS) : List Nat → List FS
     parseFile fileId (free :: acc) xs
 end
 
--- return reversed FS
 def parse (input : String) : List FS :=
   input.toList |>.map (Char.toNat . - '0'.toNat) |> parseFile 0 [] |>.reverse
 
@@ -69,14 +68,6 @@ def part1 (input : Array String) :=
   let fs := parse input[0]!
   let checksum := compress 0 0 fs
   println! s!"{checksum}"
-
-def checksumOfRemaining (pos : Nat) (checksum : Nat) : List FS → Nat
-  | [] => checksum
-  | .free length :: fs =>
-    checksumOfRemaining (pos + length) checksum fs
-  | .file id length :: fs =>
-    let (newPos, curChecksum) := addFile id pos length
-    checksumOfRemaining newPos (checksum + curChecksum) fs
 
 def startPos (pos : Nat) (acc : List Nat) : List FS → List Nat
   | [] => acc.reverse
