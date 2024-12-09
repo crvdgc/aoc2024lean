@@ -70,8 +70,56 @@ def part1 (input : Array String) :=
   let checksum := compress 0 0 fs
   println! s!"{checksum}"
 
+def checksumOfRemaining (pos : Nat) (checksum : Nat) : List FS → Nat
+  | [] => checksum
+  | .free length :: fs =>
+    checksumOfRemaining (pos + length) checksum fs
+  | .file id length :: fs =>
+    let (newPos, curChecksum) := addFile id pos length
+    checksumOfRemaining newPos (checksum + curChecksum) fs
+
+def startPos (pos : Nat) (acc : List Nat) : List FS → List Nat
+  | [] => acc.reverse
+  | .free length :: fs =>
+    startPos (pos + length) (pos :: acc) fs
+  | .file _ length :: fs =>
+    startPos (pos + length) (pos :: acc) fs
+
+-- #eval startPos 0 [] [FS.free 2, FS.file 0 3, FS.free 5]
+
+def toChecksum (pos : Nat) (id : Nat) (length : Nat) : Nat :=
+  addFile id pos length |>.snd
+
+def findFit (length : Nat) (acc : List (Nat × FS)) : List (Nat × FS) → Option (Nat × List (Nat × FS))
+  | [] => .none
+  | (pos, .file id length') :: fs =>
+    findFit length ((pos, .file id length') :: acc) fs
+  | (pos, .free length') :: fs =>
+    if length' ≥ length then
+      let frag := .free (length' - length)
+      let fragPos := pos + length
+      .some (pos, fs.reverse ++ (fragPos, frag) :: acc)
+    else
+      findFit length ((pos, .free length') :: acc) fs
+
+partial def compress' (checksum : Nat) : List (Nat × FS) → Nat
+  | [] => checksum
+  | (_, .free _) :: fs =>
+    compress' checksum fs
+  | (pos, .file id length) :: fs =>
+    match findFit length [] (fs |>.reverse) with
+    | .none =>
+      let curChecksum := toChecksum pos id length
+      compress' (checksum + curChecksum) fs
+    | .some (pos, fs) =>
+      let curChecksum := toChecksum pos id length
+      compress' (checksum + curChecksum) fs
+
 def part2 (input : Array String) :=
-  println! s!"{input}"
+  let fs := parse input[0]!
+  let poss := startPos 0 [] fs
+  let checksum := compress' 0 (poss.zip fs |>.reverse)
+  println! s!"{checksum}"
 
 def run (part : String) (input : Array String) : IO Unit :=
   if part.startsWith "1"
