@@ -48,3 +48,19 @@ def pairwise (f : α₁ → β₁ → γ₁) (g : α₂ → β₂ → γ₂) (p�
 def pairwiseBoth (f : α → β → γ) := pairwise f f
 
 end Prod
+
+namespace List
+
+def dropRetLastAux (rev_acc : List α) : List α → Option (α × List α)
+  | [] => .none
+  | [x] => .some (x, rev_acc.reverse)
+  | x :: xs => dropRetLastAux (x :: rev_acc) xs
+
+def dropRetLast : List α → Option (α × List α) :=
+  dropRetLastAux []
+
+-- #eval dropRetLast ([] : List Nat)
+-- #eval dropRetLast ([1] : List Nat)
+-- #eval dropRetLast ([1, 2, 3] : List Nat)
+
+end List

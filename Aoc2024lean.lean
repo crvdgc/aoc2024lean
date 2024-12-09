@@ -9,3 +9,4 @@ import Aoc2024lean.D5
 import Aoc2024lean.D6
 import Aoc2024lean.D7
 import Aoc2024lean.D8
+import Aoc2024lean.D9
