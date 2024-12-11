@@ -55,8 +55,30 @@ def part1 (input : Array String) := do
     0
   println! s!"{count}"
 
+def countAllEnds (bound : Int × Int) (start : Int × Int) (map : HashMap (Int × Int) Nat) : Nat :=
+  Id.run do
+    let mut count := 0
+    let mut q := Array.singleton start
+    while !q.isEmpty do
+      let (cur, q') := q.popFront!
+      q := q'
+      let curN := map[cur]!
+      if curN == 9 then
+        count := count + 1
+      else
+        for neighbor in neighboursInBound bound cur do
+          let neighborN := map[neighbor]!
+          if neighborN = curN + 1 then
+            q := q.push neighbor
+    return count
+
 def part2 (input : Array String) :=
-  println! s!"{input}"
+  let (starts, map) := parse input
+  let bound : Int × Int := (input.size, input[0]!.length)
+  let count := starts.fold
+    (fun acc start => acc + countAllEnds bound start map)
+    0
+  println! s!"{count}"
 
 def run (part : String) (input : Array String) : IO Unit :=
   if part.startsWith "1"
