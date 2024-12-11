@@ -23,6 +23,14 @@ def splitWhile (p : α → Bool) (xs: Array α) : Array α × Array α :=
 def tail (xs : Array α) : Array α :=
   xs.extract 1 xs.size
 
+def popFront? [Inhabited α] (xs : Array α) : Option (α × Array α) :=
+  if xs.isEmpty
+    then .none
+    else .some (xs[0]!, xs.tail)
+
+def popFront! [Inhabited α] (xs : Array α) : α × Array α :=
+  (xs[0]!, xs.tail)
+
 def sum [Add α] [OfNat α 0] (xs : Array α) : α :=
   xs.foldl (. + .) 0
 
