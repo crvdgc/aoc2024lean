@@ -11,6 +11,11 @@ def parse! [Inhabited α] (p: Parser α) (s: String) : α :=
   | .ok a => a
   | .error e => panic s!"Parsing failureon {s}: {e}"
 
+def int : Parser Int :=
+  tryCatch (pchar '-')
+    (fun _ => Int.neg <$> digits)
+    (fun () => digits)
+
 end Parsec
 
 namespace Array
@@ -33,6 +38,9 @@ def popFront! [Inhabited α] (xs : Array α) : α × Array α :=
 
 def sum [Add α] [OfNat α 0] (xs : Array α) : α :=
   xs.foldl (. + .) 0
+
+def prod [Mul α] [OfNat α 1] (xs : Array α) : α :=
+  xs.foldl (. * .) 1
 
 def count (xs : Array Bool) : Nat :=
   xs.filter id |>.size
